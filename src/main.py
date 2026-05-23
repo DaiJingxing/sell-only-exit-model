@@ -31,6 +31,7 @@ def main() -> None:
     print(f"tickers={','.join(summary.tickers)}")
     print(f"best_candidate={summary.best_candidate}")
     print(f"validation_score={summary.validation_score:.6f}")
+    print(f"charts={summary.charts}")
     print(f"outputs={summary.output_dir}")
 
 

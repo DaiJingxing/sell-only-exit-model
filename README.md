@@ -128,8 +128,27 @@ summary.json
 validation_candidates.csv
 test_metrics_aggregate.csv
 test_metrics_by_asset.csv
+figures/nav_test.png
+figures/returns_test.png
+figures/sharpe_test.png
 models/<candidate>/*.pt
 ```
+
+## 可视化
+
+默认运行会生成三张测试集图表：
+
+- `figures/nav_test.png`: 平均 NAV / net asset value 曲线
+- `figures/returns_test.png`: 总收益和单笔平均收益对比
+- `figures/sharpe_test.png`: Sharpe ratio 对比
+
+当前默认回测图表如下：
+
+![NAV](docs/figures/nav_test.png)
+
+![Return](docs/figures/returns_test.png)
+
+![Sharpe Ratio](docs/figures/sharpe_test.png)
 
 默认流程会做 6 组候选参数搜索，并用 validation score 选择测试集模型。当前默认最佳候选：
 

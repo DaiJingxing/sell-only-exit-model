@@ -17,6 +17,7 @@ from .router import EnsembleAgent
 from .train_router import RouterTrainConfig, train_router_on_price_sets
 from .train_router import load_router
 from .train_specialists import train_specialists
+from .visualize import write_research_charts
 
 
 @dataclass(frozen=True)
@@ -37,6 +38,7 @@ class SellOnlySummary:
     best_candidate: dict
     validation_score: float
     aggregate_test_metrics: dict[str, dict]
+    charts: dict[str, str]
     output_dir: str
 
 
@@ -249,11 +251,13 @@ def run_sell_only_research(
     for method, results in methods.items():
         method_rows = [row for row in by_asset_rows if row["method"] == method]
         aggregate[method] = {**_mean_metrics(results), **_mean_rows(method_rows, trade_keys)}
+    charts = write_research_charts(methods, aggregate, out)
     summary = SellOnlySummary(
         tickers=list(splits_by_ticker),
         best_candidate=asdict(best_candidate),
         validation_score=best_score,
         aggregate_test_metrics=aggregate,
+        charts=charts,
         output_dir=str(out),
     )
     _write_csv(out / "validation_candidates.csv", validation_rows)
