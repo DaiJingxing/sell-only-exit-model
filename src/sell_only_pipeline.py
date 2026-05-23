@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import torch
 
-from .daily_backtest import DailyBacktestResult, daily_agent_backtest, daily_rule_backtest
+from .daily_backtest import DailyBacktestResult, daily_agent_backtest, daily_buy_and_hold, daily_rule_backtest
 from .data_loader import split_prices
 from .dqn import DQNConfig, load_agent
 from .router import EnsembleAgent
@@ -251,7 +251,15 @@ def run_sell_only_research(
     for method, results in methods.items():
         method_rows = [row for row in by_asset_rows if row["method"] == method]
         aggregate[method] = {**_mean_metrics(results), **_mean_rows(method_rows, trade_keys)}
-    charts = write_research_charts(methods, aggregate, out)
+    if "SPY" not in test_sets:
+        raise RuntimeError("SPY data is required to build the S&P 500 benchmark visualizations.")
+    benchmark_result = daily_buy_and_hold(
+        test_sets["SPY"],
+        cost_bps=cost_bps,
+        annual_cash_rate=annual_cash_rate,
+    )
+    aggregate["sp500_buy_hold"] = {**benchmark_result.metrics, **_trade_metrics(benchmark_result)}
+    charts = write_research_charts(methods, benchmark_result, out)
     summary = SellOnlySummary(
         tickers=list(splits_by_ticker),
         best_candidate=asdict(best_candidate),

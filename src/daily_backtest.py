@@ -67,7 +67,14 @@ def daily_buy_and_hold(prices: np.ndarray, cost_bps: float = 5.0, annual_cash_ra
         equity_curve.append(equity)
         positions.append(1.0)
     equity_curve[-1] = _apply_transaction_cost(equity_curve[-1], 1, 0, cost_bps)
-    trades = [{"entry_index": 0, "exit_index": len(prices) - 1, "holding_days": len(prices) - 1}]
+    trades = [
+        {
+            "entry_index": 0,
+            "exit_index": len(prices) - 1,
+            "return": float(prices[-1] / prices[0] - 1.0),
+            "holding_days": len(prices) - 1,
+        }
+    ]
     return _finalize(equity_curve, positions, trades)
 
 

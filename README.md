@@ -87,6 +87,7 @@ reward = trade_return + drawdown_penalty * drawdown
 交易成本: 5 bps
 现金利率: 3.68% annualized
 数据: 16 个指数 ETF 代理
+S&P 500 benchmark: SPY buy-and-hold
 默认 seed: 11
 ```
 
@@ -128,27 +129,29 @@ summary.json
 validation_candidates.csv
 test_metrics_aggregate.csv
 test_metrics_by_asset.csv
-figures/nav_test.png
-figures/returns_test.png
-figures/sharpe_test.png
+figures/nav_vs_sp500.png
+figures/beta_vs_sp500.png
+figures/outperformance_by_volatility.png
 models/<candidate>/*.pt
 ```
 
 ## 可视化
 
-默认运行会生成三张测试集图表：
+默认运行会生成三张以 S&P 500 / SPY buy-and-hold 为 benchmark 的测试集图表：
 
-- `figures/nav_test.png`: 平均 NAV / net asset value 曲线
-- `figures/returns_test.png`: 总收益和单笔平均收益对比
-- `figures/sharpe_test.png`: Sharpe ratio 对比
+- `figures/nav_vs_sp500.png`: RL Sell Model 平均 NAV 对比 SPY buy-and-hold NAV
+- `figures/beta_vs_sp500.png`: RL Sell Model 相对 S&P 500 的 63 日滚动 beta
+- `figures/outperformance_by_volatility.png`: 按 S&P 500 波动率分组，分析模型什么时候 outperform
 
 当前默认回测图表如下：
 
-![NAV](docs/figures/nav_test.png)
+![NAV vs S&P 500](docs/figures/nav_vs_sp500.png)
 
-![Return](docs/figures/returns_test.png)
+![Beta vs S&P 500](docs/figures/beta_vs_sp500.png)
 
-![Sharpe Ratio](docs/figures/sharpe_test.png)
+![Outperformance by Market Volatility](docs/figures/outperformance_by_volatility.png)
+
+当前测试期内，SPY buy-and-hold benchmark 的总收益约 `37.18%`，Sharpe 约 `1.074`。该 benchmark 用于观察 beta 和不同市场波动状态下的相对表现，不作为本项目的主优化目标。
 
 默认流程会做 6 组候选参数搜索，并用 validation score 选择测试集模型。当前默认最佳候选：
 
